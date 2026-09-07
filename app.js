@@ -1,248 +1,509 @@
-let catatan = JSON.parse(
-localStorage.getItem("catatan")
-) || [];
+document.addEventListener("DOMContentLoaded", () => {
 
-/* =========================
-SIMPAN CATATAN
-========================= */
+  /* =====================================
+     ELEMENT HTML
+  ===================================== */
 
-function simpanCatatan() {
+  const noteForm = document.getElementById("noteForm");
+  const noteTitle = document.getElementById("noteTitle");
+  const noteContent = document.getElementById("noteContent");
 
-const judulInput = document.getElementById("judul");
-const isiInput = document.getElementById("isi");
+  const notesContainer = document.getElementById("notesContainer");
+  const emptyState = document.getElementById("emptyState");
 
-const judul = judulInput.value.trim();
-const isi = isiInput.value.trim();
+  const noteCount = document.getElementById("noteCount");
+  const searchInput = document.getElementById("searchInput");
 
-/* Cek input */
-if (judul === "" || isi === "") {
 
-    tampilkanNotifikasi(
-        "💗 Judul dan isi catatan harus diisi!"
+  /* =====================================
+     DATA CATATAN
+  ===================================== */
+
+  let notes = [];
+
+  try {
+
+    const savedNotes =
+      localStorage.getItem("cuteNotes");
+
+    if (savedNotes) {
+
+      const parsedNotes =
+        JSON.parse(savedNotes);
+
+      if (Array.isArray(parsedNotes)) {
+
+        notes = parsedNotes;
+
+      }
+
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Gagal membaca localStorage:",
+      error
     );
 
-    return;
-}
+    notes = [];
 
-/* Buat data catatan */
-const data = {
-    id: Date.now(),
-    judul: judul,
-    isi: isi
-};
-
-/* Masukkan ke array */
-catatan.push(data);
-
-/* Simpan ke localStorage */
-localStorage.setItem(
-    "catatan",
-    JSON.stringify(catatan)
-);
-
-/* Kosongkan form */
-judulInput.value = "";
-isiInput.value = "";
-
-/* Tampilkan catatan */
-tampilkanCatatan();
-
-/* Notifikasi */
-tampilkanNotifikasi(
-    "💜 Catatan berhasil disimpan! ✨"
-);
+  }
 
 
-}
+  /* =====================================
+     SIMPAN DATA
+  ===================================== */
 
-/* =========================
-TAMPILKAN CATATAN
-========================= */
+  function saveToStorage() {
 
-function tampilkanCatatan() {
+    try {
 
-const daftar =
-    document.getElementById("daftarCatatan");
+      localStorage.setItem(
+        "cuteNotes",
+        JSON.stringify(notes)
+      );
 
-daftar.innerHTML = "";
+    } catch (error) {
 
-/* Jika belum ada catatan */
-if (catatan.length === 0) {
+      console.error(
+        "Gagal menyimpan catatan:",
+        error
+      );
 
-    daftar.innerHTML = `
-        <div class="catatan-kosong">
-            <div class="empty-icon">📝</div>
+    }
 
-            <h3>Belum ada catatan</h3>
+  }
 
-            <p>
-                Yuk tulis sesuatu yang ingin kamu ingat! 💕
-            </p>
-        </div>
-    `;
 
-    return;
-}
+  /* =====================================
+     FORMAT TANGGAL
+  ===================================== */
 
-/* Tampilkan semua catatan */
-catatan.forEach(function(data) {
+  function formatDate(date) {
 
-    const card = document.createElement("div");
+    const result =
+      new Date(date);
 
-    card.className = "catatan";
+    if (isNaN(result.getTime())) {
 
-    card.innerHTML = `
-        <h3>${escapeHTML(data.judul)}</h3>
+      return "Tanggal tidak diketahui";
 
-        <p>${escapeHTML(data.isi)}</p>
+    }
 
-        <button
-            class="hapus"
-            onclick="hapusCatatan(${data.id})">
+    return result.toLocaleString(
+      "id-ID",
+      {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      }
+    );
 
-            🗑️ Hapus
+  }
 
-        </button>
-    `;
 
-    daftar.appendChild(card);
+  /* =====================================
+     UPDATE JUMLAH
+  ===================================== */
+
+  function updateCount() {
+
+    const total = notes.length;
+
+    if (total === 0) {
+
+      noteCount.textContent =
+        "0 Catatan";
+
+    } else if (total === 1) {
+
+      noteCount.textContent =
+        "1 Catatan";
+
+    } else {
+
+      noteCount.textContent =
+        `${total} Catatan`;
+
+    }
+
+  }
+
+
+  /* =====================================
+     TAMPILKAN EMPTY STATE
+  ===================================== */
+
+  function showEmptyState(messageType = "empty") {
+
+    emptyState.style.display = "block";
+
+    const title =
+      emptyState.querySelector("h3");
+
+    const paragraph =
+      emptyState.querySelector("p");
+
+
+    if (messageType === "search") {
+
+      title.textContent =
+        "Catatan tidak ditemukan 🔍";
+
+      paragraph.textContent =
+        "Coba gunakan kata pencarian lain 💜";
+
+    } else {
+
+      title.textContent =
+        "Belum ada catatan";
+
+      paragraph.textContent =
+        "Yuk tulis sesuatu yang ingin kamu ingat! ❤️";
+
+    }
+
+  }
+
+
+  /* =====================================
+     RENDER SEMUA CATATAN
+  ===================================== */
+
+  function renderNotes(keyword = "") {
+
+    /* Kosongkan container */
+
+    notesContainer.innerHTML = "";
+
+
+    /* Bersihkan keyword */
+
+    const searchKeyword =
+      keyword.trim().toLowerCase();
+
+
+    /* Filter */
+
+    const filteredNotes =
+      notes.filter(note => {
+
+        const title =
+          String(note.title || "")
+            .toLowerCase();
+
+        const content =
+          String(note.content || "")
+            .toLowerCase();
+
+        return (
+          title.includes(searchKeyword) ||
+          content.includes(searchKeyword)
+        );
+
+      });
+
+
+    /* Update jumlah */
+
+    updateCount();
+
+
+    /* =================================
+       JIKA TIDAK ADA CATATAN
+    ================================= */
+
+    if (filteredNotes.length === 0) {
+
+      if (searchKeyword !== "") {
+
+        showEmptyState("search");
+
+      } else {
+
+        showEmptyState("empty");
+
+      }
+
+      return;
+
+    }
+
+
+    /* Sembunyikan empty state */
+
+    emptyState.style.display = "none";
+
+
+    /* =================================
+       BUAT CARD CATATAN
+    ================================= */
+
+    filteredNotes.forEach(note => {
+
+      const card =
+        document.createElement("article");
+
+      card.className =
+        "note-card";
+
+
+      /* Judul */
+
+      const title =
+        document.createElement("h3");
+
+      title.textContent =
+        note.title || "Tanpa Judul";
+
+
+      /* Isi */
+
+      const content =
+        document.createElement("p");
+
+      content.textContent =
+        note.content || "";
+
+
+      /* Tanggal */
+
+      const date =
+        document.createElement("div");
+
+      date.className =
+        "note-date";
+
+      date.textContent =
+        `🕒 ${formatDate(note.date)}`;
+
+
+      /* Tombol hapus */
+
+      const deleteButton =
+        document.createElement("button");
+
+      deleteButton.type =
+        "button";
+
+      deleteButton.className =
+        "delete-btn";
+
+      deleteButton.textContent =
+        "🗑️";
+
+      deleteButton.title =
+        "Hapus catatan";
+
+
+      /* Hapus berdasarkan ID */
+
+      deleteButton.addEventListener(
+        "click",
+        () => {
+
+          deleteNote(note.id);
+
+        }
+      );
+
+
+      /* Masukkan ke card */
+
+      card.appendChild(title);
+
+      card.appendChild(content);
+
+      card.appendChild(date);
+
+      card.appendChild(deleteButton);
+
+
+      /* Masukkan card ke container */
+
+      notesContainer.appendChild(card);
+
+    });
+
+  }
+
+
+  /* =====================================
+     TAMBAH CATATAN
+  ===================================== */
+
+  noteForm.addEventListener(
+    "submit",
+    event => {
+
+      event.preventDefault();
+
+
+      /* Ambil nilai */
+
+      const title =
+        noteTitle.value.trim();
+
+      const content =
+        noteContent.value.trim();
+
+
+      /* Validasi */
+
+      if (title === "") {
+
+        alert(
+          "Judul catatan belum diisi 💜"
+        );
+
+        noteTitle.focus();
+
+        return;
+
+      }
+
+
+      if (content === "") {
+
+        alert(
+          "Isi catatan belum diisi 📝"
+        );
+
+        noteContent.focus();
+
+        return;
+
+      }
+
+
+      /* Buat catatan baru */
+
+      const newNote = {
+
+        id:
+          Date.now() +
+          Math.floor(Math.random() * 1000),
+
+        title:
+          title,
+
+        content:
+          content,
+
+        date:
+          new Date().toISOString()
+
+      };
+
+
+      /* Tambahkan ke awal */
+
+      notes.unshift(newNote);
+
+
+      /* Simpan */
+
+      saveToStorage();
+
+
+      /* Tampilkan */
+
+      renderNotes();
+
+
+      /* Kosongkan form */
+
+      noteForm.reset();
+
+
+      /* Fokus */
+
+      noteTitle.focus();
+
+
+      /* Scroll ke daftar */
+
+      setTimeout(() => {
+
+        const notesSection =
+          document.querySelector(
+            ".notes-section"
+          );
+
+        if (notesSection) {
+
+          notesSection.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+
+        }
+
+      }, 150);
+
+    }
+  );
+
+
+  /* =====================================
+     HAPUS CATATAN
+  ===================================== */
+
+  function deleteNote(id) {
+
+    const confirmDelete =
+      confirm(
+        "Yakin ingin menghapus catatan ini? 🥺"
+      );
+
+
+    if (!confirmDelete) {
+
+      return;
+
+    }
+
+
+    notes =
+      notes.filter(
+        note => note.id !== id
+      );
+
+
+    saveToStorage();
+
+
+    renderNotes(
+      searchInput.value
+    );
+
+  }
+
+
+  /* =====================================
+     SEARCH
+  ===================================== */
+
+  searchInput.addEventListener(
+    "input",
+    () => {
+
+      renderNotes(
+        searchInput.value
+      );
+
+    }
+  );
+
+
+  /* =====================================
+     TAMPILKAN SAAT HALAMAN DIBUKA
+  ===================================== */
+
+  renderNotes();
+
+
 });
-
-
-}
-
-/* =========================
-HAPUS CATATAN
-========================= */
-
-function hapusCatatan(id) {
-
-const yakin = confirm(
-    "💗 Yakin ingin menghapus catatan ini?"
-);
-
-if (!yakin) {
-    return;
-}
-
-catatan = catatan.filter(
-    function(data) {
-        return data.id !== id;
-    }
-);
-
-/* Update localStorage */
-localStorage.setItem(
-    "catatan",
-    JSON.stringify(catatan)
-);
-
-/* Tampilkan ulang */
-tampilkanCatatan();
-
-tampilkanNotifikasi(
-    "🗑️ Catatan berhasil dihapus!"
-);
-
-
-}
-
-/* =========================
-NOTIFIKASI
-========================= */
-
-function tampilkanNotifikasi(pesan) {
-
-/* Hapus notifikasi lama */
-const notifikasiLama =
-    document.querySelector(".notifikasi");
-
-if (notifikasiLama) {
-    notifikasiLama.remove();
-}
-
-/* Buat notifikasi */
-const notifikasi =
-    document.createElement("div");
-
-notifikasi.className = "notifikasi";
-
-notifikasi.textContent = pesan;
-
-document.body.appendChild(notifikasi);
-
-/* Animasi masuk */
-setTimeout(function() {
-    notifikasi.classList.add("tampil");
-}, 10);
-
-/* Hapus setelah beberapa detik */
-setTimeout(function() {
-
-    notifikasi.classList.remove("tampil");
-
-    setTimeout(function() {
-        notifikasi.remove();
-    }, 400);
-
-}, 2500);
-
-
-}
-
-/* =========================
-KEAMANAN TEKS
-========================= */
-
-function escapeHTML(teks) {
-
-return teks
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
-
-}
-
-/* =========================
-SERVICE WORKER
-========================= */
-
-if ("serviceWorker" in navigator) {
-
-window.addEventListener(
-    "load",
-    function() {
-
-        navigator.serviceWorker
-            .register("./service-worker.js")
-
-            .then(function() {
-
-                console.log(
-                    "💜 Service Worker berhasil dijalankan"
-                );
-
-            })
-
-            .catch(function(error) {
-
-                console.log(
-                    "Service Worker gagal:",
-                    error
-                );
-
-            });
-    }
-);
-
-
-}
-
-/* =========================
-JALANKAN SAAT HALAMAN DIBUKA
-========================= */
-
-tampilkanCatatan();
