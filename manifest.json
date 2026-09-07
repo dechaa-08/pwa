@@ -1,16 +1,20 @@
 {
-    "name": "Notes App",
-    "short_name": "Notes",
-    "description": "Aplikasi catatan sederhana",
-    "start_url": "./index.html",
-    "display": "standalone",
-    "background_color": "#f1f2f6",
-    "theme_color": "#6c5ce7",
-    "icons": [
-        {
-            "src": "icon.png",
-            "sizes": "192x192",
-            "type": "image/png"
-        }
-    ]
+  "name": "My Cute Notes 💜",
+  "short_name": "Cute Notes",
+  "description": "Aplikasi catatan sederhana untuk menulis, menyimpan, dan mengelola catatan.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f7eaff",
+  "theme_color": "#9b72cb",
+  "lang": "id",
+  "icons": [
+    {
+      "src": "./icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
 }
