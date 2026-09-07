@@ -1,57 +1,155 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <meta charset="UTF-8">
+  <title>My Cute Notes 💜</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <meta name="theme-color"
-          content="#6c5ce7">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
 
-    <title>Notes App</title>
-
-    <link rel="stylesheet"
-          href="style.css">
-
-    <link rel="manifest"
-          href="manifest.json">
-
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
 
-    <div class="container">
+  <!-- Background Decoration -->
+  <div class="background-decoration" aria-hidden="true">
+    <span>💜</span>
+    <span>💗</span>
+    <span>✨</span>
+    <span>🌸</span>
+    <span>💕</span>
+    <span>⭐</span>
+    <span>💖</span>
+    <span>🌷</span>
+  </div>
 
-        <h1>📝 Notes App</h1>
+  <!-- Main -->
+  <main class="container">
 
-        <div class="form">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">📝</div>
 
-            <input
-                type="text"
-                id="judul"
-                placeholder="Judul catatan">
+      <h1>My Cute Notes</h1>
 
-            <textarea
-                id="isi"
-                placeholder="Tulis catatan..."
-                rows="6">
-            </textarea>
+      <p>
+        ✨ Tulis, simpan, dan jangan lupa tersenyum! ✨
+      </p>
+    </header>
 
-            <button onclick="simpanCatatan()">
-                Simpan Catatan
-            </button>
+    <!-- Form Section -->
+    <section class="note-form-card">
 
+      <div class="section-title">
+        <span class="title-icon">💌</span>
+        <div>
+          <h2>Buat Catatan Baru</h2>
+          <p>Tulis sesuatu yang ingin kamu simpan 💜</p>
+        </div>
+      </div>
+
+      <form id="noteForm">
+
+        <div class="form-group">
+          <label for="noteTitle">
+            💬 Judul Catatan
+          </label>
+
+          <input
+            type="text"
+            id="noteTitle"
+            placeholder="Contoh: Tugas hari ini..."
+            autocomplete="off"
+            required
+          />
         </div>
 
-        <h2>Daftar Catatan</h2>
+        <div class="form-group">
+          <label for="noteContent">
+            📝 Isi Catatan
+          </label>
 
-        <div id="daftarCatatan"></div>
+          <textarea
+            id="noteContent"
+            rows="6"
+            placeholder="Tulis sesuatu di sini..."
+            required
+          ></textarea>
+        </div>
 
-    </div>
+        <button type="submit" class="save-btn">
+          💜 Simpan Catatan ✨
+        </button>
 
-    <script src="app.js"></script>
+      </form>
+
+    </section>
+
+    <!-- Notes Section -->
+    <section class="notes-section">
+
+      <div class="notes-header">
+        <div>
+          <h2>📚 Daftar Catatan</h2>
+          <p>Semua catatan kamu ada di sini 💕</p>
+        </div>
+
+        <span id="noteCount" class="note-count">
+          0 Catatan
+        </span>
+      </div>
+
+      <!-- Search -->
+      <div class="search-box">
+        <span>🔍</span>
+
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Cari catatan..."
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- Notes Container -->
+      <div id="notesContainer" class="notes-container"></div>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="empty-state">
+
+        <div class="empty-icon">
+          📝
+        </div>
+
+        <h3>Belum ada catatan</h3>
+
+        <p>
+          Yuk tulis sesuatu yang ingin kamu ingat! ❤️
+        </p>
+
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>💖 Made with love & purple magic 💜</p>
+    </footer>
+
+  </main>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+
 </body>
 </html>
