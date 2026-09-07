@@ -1,28 +1,26 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>My Cute Notes 💜</title>
 
-  <!-- Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
     href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Poppins:wght@400;500;600&display=swap"
     rel="stylesheet"
-  />
+  >
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-  <!-- Background Decoration -->
-  <div class="background-decoration" aria-hidden="true">
+  <!-- Dekorasi Background -->
+  <div class="background-decoration">
     <span>💜</span>
     <span>💗</span>
     <span>✨</span>
@@ -33,34 +31,50 @@
     <span>🌷</span>
   </div>
 
-  <!-- Main -->
+
   <main class="container">
 
-    <!-- Header -->
+    <!-- HEADER -->
     <header class="header">
-      <div class="logo">📝</div>
+
+      <div class="logo">
+        📝
+      </div>
 
       <h1>My Cute Notes</h1>
 
       <p>
         ✨ Tulis, simpan, dan jangan lupa tersenyum! ✨
       </p>
+
     </header>
 
-    <!-- Form Section -->
+
+    <!-- FORM CATATAN -->
     <section class="note-form-card">
 
       <div class="section-title">
-        <span class="title-icon">💌</span>
+
+        <div class="title-icon">
+          💌
+        </div>
+
         <div>
           <h2>Buat Catatan Baru</h2>
-          <p>Tulis sesuatu yang ingin kamu simpan 💜</p>
+
+          <p>
+            Simpan ide, tugas, atau hal penting kamu 💜
+          </p>
         </div>
+
       </div>
+
 
       <form id="noteForm">
 
+        <!-- Judul -->
         <div class="form-group">
+
           <label for="noteTitle">
             💬 Judul Catatan
           </label>
@@ -68,13 +82,16 @@
           <input
             type="text"
             id="noteTitle"
-            placeholder="Contoh: Tugas hari ini..."
-            autocomplete="off"
+            placeholder="Contoh: Tugas sekolah hari ini..."
             required
-          />
+          >
+
         </div>
 
+
+        <!-- Isi -->
         <div class="form-group">
+
           <label for="noteContent">
             📝 Isi Catatan
           </label>
@@ -85,9 +102,15 @@
             placeholder="Tulis sesuatu di sini..."
             required
           ></textarea>
+
         </div>
 
-        <button type="submit" class="save-btn">
+
+        <!-- Tombol -->
+        <button
+          type="submit"
+          class="save-btn"
+        >
           💜 Simpan Catatan ✨
         </button>
 
@@ -95,43 +118,68 @@
 
     </section>
 
-    <!-- Notes Section -->
+
+    <!-- DAFTAR CATATAN -->
     <section class="notes-section">
 
       <div class="notes-header">
+
         <div>
-          <h2>📚 Daftar Catatan</h2>
-          <p>Semua catatan kamu ada di sini 💕</p>
+
+          <h2>
+            📚 Daftar Catatan
+          </h2>
+
+          <p>
+            Semua catatan kamu tersimpan di sini 💕
+          </p>
+
         </div>
 
-        <span id="noteCount" class="note-count">
+        <div
+          id="noteCount"
+          class="note-count"
+        >
           0 Catatan
-        </span>
+        </div>
+
       </div>
 
-      <!-- Search -->
+
+      <!-- SEARCH -->
       <div class="search-box">
+
         <span>🔍</span>
 
         <input
           type="text"
           id="searchInput"
           placeholder="Cari catatan..."
-          autocomplete="off"
-        />
+        >
+
       </div>
 
-      <!-- Notes Container -->
-      <div id="notesContainer" class="notes-container"></div>
 
-      <!-- Empty State -->
-      <div id="emptyState" class="empty-state">
+      <!-- TEMPAT CATATAN MUNCUL -->
+      <div
+        id="notesContainer"
+        class="notes-container"
+      ></div>
+
+
+      <!-- BELUM ADA CATATAN -->
+      <div
+        id="emptyState"
+        class="empty-state"
+      >
 
         <div class="empty-icon">
           📝
         </div>
 
-        <h3>Belum ada catatan</h3>
+        <h3>
+          Belum ada catatan
+        </h3>
 
         <p>
           Yuk tulis sesuatu yang ingin kamu ingat! ❤️
@@ -141,14 +189,20 @@
 
     </section>
 
-    <!-- Footer -->
+
+    <!-- FOOTER -->
     <footer class="footer">
-      <p>💖 Made with love & purple magic 💜</p>
+
+      <p>
+        💖 Made with love & purple magic 💜
+      </p>
+
     </footer>
 
   </main>
 
-  <!-- JavaScript -->
+
+  <!-- JAVASCRIPT -->
   <script src="app.js"></script>
 
 </body>
